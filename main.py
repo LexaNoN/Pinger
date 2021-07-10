@@ -14,14 +14,18 @@ points = 0.0  # Counter of "point's"
 errorcheck = False  # Switch for logger
 errorcheckisp = False
 errorcheckrouter = False
-
+oserrorcheck = False
 
 def pingmine(ip):  # Try to check
+    global oserrorcheck
     try:  # Sometimes windows create exception. Ok boomer
         response_list = ping(ip, count=2)
     except OSError:
-        logger.error("OS can't connect, check console")
+        if oserrorcheck is False:
+            logger.error("OS can't connect, check console")
+            oserrorcheck = True
         return "Error"
+    oserrorcheck = False
     if not response_list.rtt_max_ms == 2000:  # 2000 - Packet loss. We can check not max, but
         return True
     elif response_list.rtt_max_ms == 2000:  # I think it be more "useful"
@@ -52,9 +56,9 @@ def checkip(ip):  # Sum point
             return False
 
     else:
-        if check is True and points >= 0.5:  # Border from 0
-            points = points - 0.5
-        elif check is False and points <= 4:  # To 5
+        if check is True and points >= 1:  # Border from 0
+            points = points - 1
+        elif check is False and points <= 5:  # To 6
             points = points + 1
 
 
