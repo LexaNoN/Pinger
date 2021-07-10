@@ -8,13 +8,13 @@ file_handler = logging.FileHandler('logfile.log')
 formatter = logging.Formatter('%(asctime)s : %(levelname)s : %(name)s : %(message)s')
 file_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
-logger.warning("----- Start new loop! -----")
+logger.info("----- Start new loop! -----")
 
-points = 0.0  # Counter of "point's"
+points = 0.0  # Counter of ping error's
 errorcheck = False  # Switch for logger
-errorcheckisp = False
-errorcheckrouter = False
-oserrorcheck = False
+errorcheckisp = False  # Switch for ISP
+errorcheckrouter = False  # Switch for Router
+oserrorcheck = False  # Switch for OSError
 
 def pingmine(ip):  # Try to check
     global oserrorcheck
@@ -22,9 +22,9 @@ def pingmine(ip):  # Try to check
         response_list = ping(ip, count=2)
     except OSError:
         if oserrorcheck is False:
-            logger.error("OS can't connect, check console")
+            logger.error("OS can't connect")
             oserrorcheck = True
-        return "Error"
+        return None
     oserrorcheck = False
     if not response_list.rtt_max_ms == 2000:  # 2000 - Packet loss. We can check not max, but
         return True
