@@ -16,6 +16,7 @@ errorcheckisp = False  # Switch for ISP
 errorcheckrouter = False  # Switch for Router
 oserrorcheck = False  # Switch for OSError
 
+
 def pingmine(ip):  # Try to check
     global oserrorcheck
     try:  # Sometimes windows create exception. Ok boomer
@@ -24,12 +25,10 @@ def pingmine(ip):  # Try to check
         if oserrorcheck is False:
             logger.error("OS can't connect")
             oserrorcheck = True
-        return None
-    oserrorcheck = False
-    if not response_list.rtt_max_ms == 2000:  # 2000 - Packet loss. We can check not max, but
-        return True
-    elif response_list.rtt_max_ms == 2000:  # I think it be more "useful"
         return False
+    oserrorcheck = False
+
+    return not response_list.rtt_max_ms == 2000
 
 
 def checkip(ip):  # Sum point
@@ -68,7 +67,7 @@ while True:
     sleep(0.5)  # Here we can add some ping addresses.
     checkip("8.8.8.8")  # Google
     checkip("1.1.1.1")  # CloudFare
-    # print("Error point: " + str(points))
+    print("Error point: " + str(points))
 
     if points >= 3 and errorcheck is False:
         print("Internet lost!")
